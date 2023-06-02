@@ -48,6 +48,7 @@ class MySQLConnection:
                 self.importarTabelaCSV(tabela)
             i+=1
 
+
     def importarTabelaCSV(self,nomeTabela):
         novaTabela = open(nomeTabela,"w")
 
