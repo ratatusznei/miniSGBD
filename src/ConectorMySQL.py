@@ -9,23 +9,25 @@
 #push sobe todos os arquivos
 #git push
 
+from CRUD import CRUD
 
 import mysql.connector
 
-class MySQLConnection:
+class ConectorMySQL:
     def __init__(self, host, username, password, database):
         self.host = host
         self.username = username
         self.password = password
         self.database = database
         self.connection = None
+        self.load = 0
 
     def getConexao(self):
         return self.connection
     
     #Quando for pegar a tabela, faça algo como nomeTabelaa =  tabelas[6][0]
     #pois o retorno dos nomes das tabelas é uma tupla.
-    def getTabela(self,nomeTabela):
+    def getElementosTabela(self,nomeTabela):
         if self.connection:
             cursor = self.connection.cursor()
             cursor.execute("SELECT * FROM " + nomeTabela + ";")
@@ -50,6 +52,7 @@ class MySQLConnection:
     def desconectar(self):
         if self.connection:
             self.connection.close()
+            self.connection = None
             print("Fim da conexão.")
 
     #retorna todas as tabelas existentes no banco de dados conectado
@@ -61,32 +64,14 @@ class MySQLConnection:
         else:
             print("A conexão não está estabelecida.")
             return None
-        
-    #tabelas selecionadas deve ser um vetor de True e False, que indica se deve-se importar aquela tabela
-    def setTabelasImportar(self,tabelasSelecionadas):
-        tabelas = self.getTodasTabelas()
-        i = 0
-        for tabela in tabelas:
-            if(tabelasSelecionadas[i]):
-                self.importarTabelaCSV(tabela)
-            i+=1
-
-            
-    def importarTabelaCSV(self,nomeTabela):
-        novaTabela = open(nomeTabela,"w")
-
-
-# Exemplo de uso:
-#connection = MySQLConnection('localhost', 'root', '033002970', 'employees')
-#connection.conectar()
-#
-#tabelas = connection.getTodasTabelas()
-#
-#nomeTabelaa =  tabelas[6][0]
-#print(nomeTabelaa)
-#salaries = connection.getTabela(nomeTabelaa)
-#
-#for salario in salaries:
-#    print(salario)
-#
-#connection.desconectar()
+    
+    def getNomesColunas(self,nomeTabela):
+        if self.connection:
+            cursor = self.connection.cursor()
+            cursor.execute("SHOW COLUMNS FROM " + nomeTabela + ";")
+            retorno = []
+            for cabecalho in cursor.fetchall():
+                retorno.append(cabecalho[0])
+            return retorno
+        return None
+    
