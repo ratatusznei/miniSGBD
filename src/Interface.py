@@ -167,6 +167,7 @@ class Interface:
 
     #estado 4
     def menuConsultaSQL(self):
+        os.system("clear")
         print("Sessão de consultas em SQL, digite sua consulta ou um dos valores abaixo para continuar.")
         print("")
         print("")
