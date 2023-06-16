@@ -13,6 +13,30 @@ class CRUD:
 
 
     
+    def isCRUD(self,consulta) -> str:
+        if("CREATE" or "INSERT" in consulta):
+            return "CREATE"
+        if("READ" in consulta):
+            return "READ"
+        if("UPDATE" in consulta):
+            return "UPDATE"
+        if("DELETE" in consulta):
+            return "DELETE"
+
+    def separadorCRUD(self,consulta,tipoConsulta) :
+        consulta = "Feita"
+
+    def CREATE(self,consulta):
+        consulta = "Feita"
+
+    def READ(self,consulta):
+        consulta = "Feita"
+    
+    def UPDATE(self,consulta):
+        consulta = "Feita"
+
+    def DELETE(self,consulta):
+        consulta = "Feita"
 
     #teste
     def PRINTCSV(self,nomeTabela):

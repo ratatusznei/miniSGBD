@@ -34,8 +34,7 @@ class GerenciadorArquivos:
                 if nomeDB[0] in banco:
                     existe = True
 
-        #if(existe == False):
-        if(True):
+        if(existe == False):
             self.SOBREPORBANCO_PRIVADO(nomeDB,nomesTabelas,nomesColunas)
             return True
         #se o arquivo já existe, apagamos e substituimos ele
