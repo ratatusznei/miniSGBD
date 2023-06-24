@@ -17,11 +17,13 @@ class Interface:
         self.gerente = GerenciadorArquivos()
         self.tabelas = []
         self.colunas = []
+        self.mensagemLoad = ""
         self.loadConcluido = False
         self.crud = CRUD()
 
     #estado 0 
     def menuInicial(self):
+        os.system("clear")
         print("----------Bem vindo ao MiniSGBD.----------")
         print("Pressione 1 para importar um novo banco de dados;")
         print("Pressione 2 para abrir um banco de dados já importado.")
@@ -43,30 +45,33 @@ class Interface:
 
     #estado 1  para adicionar um novo banco de dados
     def menuNovoBD(self):
+        os.system("clear")
         print("Digite 0 para voltar ao menu anterior.")
         print("Digite 1 para carregar o banco Employees. (testes)")
         print("Digite o usuário para conectar com o MySQL.")
         print("")
         user = input("")
-        if(int(user) == 0):
-            self.menuInicial()
-        elif(int(user) == 1):
-            self.conectarMySQL_PRIVADO("localhost","root",senhaGeral,"employees")
-            if(self.conexao.conectar()):
-                self.pegarTabelas_PRIVADO()
-                os.system("clear")
-                print("Conexao realizada com sucesso!.")
-                time.sleep(tempo2)
-                self.menuSelecionarTabelas()
+        if(user.isdigit()):
+            if(int(user) == 0):
+                self.menuInicial()
+            elif(int(user) == 1):
+                self.conectarMySQL_PRIVADO("localhost","root",senhaGeral,"employees")
+                if(self.conexao.conectar()):
+                    self.pegarTabelas_PRIVADO()
+                    os.system("clear")
+                    if(self.conexao.bancoConectado()):
+                        print("Conexao realizada com sucesso!.")
+                    else:
+                        print("Conexao não estabelecida")
+                        self.menuNovoBD()
+                    time.sleep(tempo2)
+                    self.menuSelecionarTabelas()
         else:
             host = input("Digite o host : ")
-            self.menuInicial()
             senha = input("Digite a senha : ")
-            self.menuInicial()
             banco = input("Digite o nome do banco de dados : ")
-            self.menuInicial()
             self.conectarMySQL_PRIVADO(host,user,senha,banco)
-            if(self.conexao.conectar()):
+            if(self.conexao.bancoConectado()):
                 self.pegarTabelas_PRIVADO()
                 os.system("clear")
                 print("Conexao realizada com sucesso!.")
@@ -80,6 +85,7 @@ class Interface:
             
     #estado 2  para selecionar um banco de dados já salvo
     def menuBancosSalvos(self):
+        os.system("clear")
         bancos = self.gerente.GETDATABASES()
         print("Abaixo estão todos os bancos já salvos:")
         i = 1
@@ -103,7 +109,7 @@ class Interface:
 
     #estado 3  depois do menu Novo banco, vem para este, para selecionar as tabelas
     def menuSelecionarTabelas(self):
-        
+        os.system("clear")
 
         entrada = 1
         selecionados = [0] * len(self.tabelas)
@@ -126,14 +132,14 @@ class Interface:
             if "ALL" in entrada or "all" in entrada:
                 for j in range(len(selecionados)):
                     selecionados[j] = 1
-                    entrada = 0
-                    os.system("clear")
-                    print("Todas as tabelas foram selecionadas.")
-                    print("Aquarde enquanto os dados são requisitados no MySQL.")
-                    time.sleep(tempo2)
-                    break
+                entrada = 0
+                os.system("clear")
+                print("Todas as tabelas foram selecionadas.")
+                print("Aquarde enquanto os dados são requisitados no MySQL.")
+                time.sleep(tempo2)
+                break
             elif entrada.isdigit():
-                if(int(entrada) <= len(selecionados)):
+                if(int(entrada) <= len(selecionados) and int(entrada) > 0):
                     selecionados[int(entrada) - 1] = 1
             elif "end" in entrada or "END" in entrada:
                 entrada = 0
@@ -156,15 +162,26 @@ class Interface:
         self.tabelas.clear()
         self.tabelas = tabelaAux
 
+        self.mensagemLoad = "Requisitando nomes das colunas das tabelas."
         self.pegarColunas_PRIVADO()
-
+        #paramos a thred para perguntar (caso o banco já exista), se quer subistitui-lo
+        self.mensagemLoad = "Criando arquivo csv principal (bancos.dat e " + self.bancoAtual + ".dat)."
+        self.loadConcluido = True
+        thread.join()
         self.gerente.CREATEDATABASE(self.bancoAtual,self.tabelas,self.colunas)
+
+        self.loadConcluido = False
+        thread = threading.Thread(target=self.telaLoad)
+        thread.start()
 
         self.criarTabelas_PRIVADO()
 
+        
         self.loadConcluido = True
         thread.join()
 
+        self.menuConsultaSQL()
+        
     #estado 4
     def menuConsultaSQL(self):
         os.system("clear")
@@ -193,6 +210,7 @@ class Interface:
         #se a consulta for um simples CRUD, preciso dessa informação para fazer o que segue abaixo
 
     def recuperarBancoLocal_PRIVADO(self):
+        os.system("clear")
         banco = self.gerente.GETDATABASE(self.bancoAtual)
         self.tabelas.clear()
         self.tabelas = []
@@ -224,11 +242,12 @@ class Interface:
 
     def criarTabelas_PRIVADO(self):
         for tabela in self.tabelas:
+            self.mensagemLoad = "Criando arquivos da tabela " + self.gerente.tabelaAtual + "."
             elementos = self.conexao.getElementosTabela(tabela)
             self.gerente.CREATETABLE(self.bancoAtual,tabela,elementos)
 
     def pegarColunas_PRIVADO(self):
-        if(self.conexao):
+        if(self.conexao.bancoConectado()):
             for auxiliar in self.tabelas:
                 self.colunas.append(self.conexao.getNomesColunas(auxiliar))
 
@@ -236,12 +255,12 @@ class Interface:
         self.conexao.desconectar()
 
     def telaLoad(self):
-        texto = "Carregando."
+        texto =  self.mensagemLoad + "\n" + "Carregando"
         i = 0
         while(self.loadConcluido == False):
-            if(i > 4):
+            if(i > 3):
                 i = 0
-                texto = "Carregando."
+                texto = self.mensagemLoad + "\n" + "Carregando"
             os.system("clear")
             print(texto)
             time.sleep(tempo0)
