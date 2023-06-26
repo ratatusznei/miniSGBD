@@ -18,6 +18,7 @@ class ListaTabelas:
             if self.tabelas[i].nome == nome:
                 self.tabelas.pop(i)
                 break
+            i += 1
 
         nova = Tabela(nome,tabela)
         self.tabelas.append(nova)

@@ -2,6 +2,8 @@
 from ConectorMySQL import ConectorMySQL
 from GerenciadorArquivos import GerenciadorArquivos
 from CRUD import CRUD
+from pprint import pprint
+from QueryProcessor import QueryProcessor
 import os
 import time
 import threading
@@ -205,6 +207,11 @@ class Interface:
                 print("Digite 0 coisa para voltar a consulta.")
                 consulta = input("")
                 self.menuConsultaSQL()
+
+        else:
+            qp = QueryProcessor()
+            result = qp.executeQuery(consulta)
+            pprint(result)
 
         #parte do fernando
         #se a consulta for um simples CRUD, preciso dessa informação para fazer o que segue abaixo
