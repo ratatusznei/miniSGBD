@@ -22,6 +22,10 @@ class ConectorMySQL:
         self.connection = None
         self.load = 0
 
+
+    def bancoConectado(self) -> bool:
+        return self.connection != None and self.connection.is_connected()
+
     def getConexao(self):
         return self.connection
     
@@ -46,6 +50,7 @@ class ConectorMySQL:
             )
             return True
         except mysql.connector.Error as error:
+            print("Erro ao conectar - MYSQL ERROR : ",error)
             return False
 
     #desconecta o banco de dados
