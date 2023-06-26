@@ -1,7 +1,7 @@
 import re
 
 class Lexer:
-    pattern = '[\w.]+|<=|>=|[,()=<>]'
+    pattern = '[\w.]+|<=|>=|[,*()=<>]'
 
     def __init__(self, sql_query):
         self.tokens = re.findall(self.pattern, sql_query)    
