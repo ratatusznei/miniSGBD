@@ -46,25 +46,25 @@ class Interface:
     def menuNovoBD(self):
         os.system("clear")
         print("Digite 0 para voltar ao menu anterior.")
-        print("Digite 1 para carregar o banco Employees. (testes)")
+        # print("Digite 1 para carregar o banco Employees. (testes)")
         print("Digite o usuário para conectar com o MySQL.")
         print("")
         user = input("")
         if(user.isdigit()):
             if(int(user) == 0):
                 self.menuInicial()
-            elif(int(user) == 1):
-                self.conectarMySQL_PRIVADO("localhost","root",senhaGeral,"employees")
-                if(self.conexao.conectar()):
-                    self.pegarTabelas_PRIVADO()
-                    os.system("clear")
-                    if(self.conexao.bancoConectado()):
-                        print("Conexao realizada com sucesso!.")
-                    else:
-                        print("Conexao não estabelecida")
-                        self.menuNovoBD()
-                    time.sleep(tempo2)
-                    self.menuSelecionarTabelas()
+            # elif(int(user) == 1):
+            #     self.conectarMySQL_PRIVADO("localhost","root",senhaGeral,"employees")
+            #     if(self.conexao.conectar()):
+            #         self.pegarTabelas_PRIVADO()
+            #         os.system("clear")
+            #         if(self.conexao.bancoConectado()):
+            #             print("Conexao realizada com sucesso!.")
+            #         else:
+            #             print("Conexao não estabelecida")
+            #             self.menuNovoBD()
+            #         time.sleep(tempo2)
+            #         self.menuSelecionarTabelas()
         else:
             host = input("Digite o host : ")
             senha = input("Digite a senha : ")
