@@ -147,7 +147,7 @@ class QueryProcessor:
         if query.projection[0][1] != '*':
             proj_res = [[]]
             query.projection = list(map(lambda x: x[1], query.projection))
-            projection_ids = self.get_proj_ids(query.projection, table)
+            projection_ids = self.get_proj_ids(query.projection, where_res)
 
             for pi in projection_ids:
                 proj_res[0].append(where_res[0][pi])

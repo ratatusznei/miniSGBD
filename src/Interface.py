@@ -205,7 +205,6 @@ class Interface:
                 print("")
                 print("Digite 0 coisa para voltar a consulta.")
                 consulta = input("")
-                self.menuConsultaSQL()
 
         else:
             qp = QueryProcessor()
@@ -213,8 +212,8 @@ class Interface:
             for i in result:
                 print(i)
 
-        #parte do fernando
-        #se a consulta for um simples CRUD, preciso dessa informação para fazer o que segue abaixo
+        input('')
+        self.menuConsultaSQL()
 
     def recuperarBancoLocal_PRIVADO(self):
         os.system("clear")
