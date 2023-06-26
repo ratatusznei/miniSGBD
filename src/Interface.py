@@ -2,7 +2,6 @@
 from ConectorMySQL import ConectorMySQL
 from GerenciadorArquivos import GerenciadorArquivos
 from CRUD import CRUD
-from pprint import pprint
 from QueryProcessor import QueryProcessor
 import os
 import time
@@ -211,7 +210,8 @@ class Interface:
         else:
             qp = QueryProcessor()
             result = qp.executeQuery(consulta)
-            pprint(result)
+            for i in result:
+                print(i)
 
         #parte do fernando
         #se a consulta for um simples CRUD, preciso dessa informação para fazer o que segue abaixo
