@@ -9,8 +9,6 @@
 #push sobe todos os arquivos
 #git push
 
-from CRUD import CRUD
-
 import mysql.connector
 
 class ConectorMySQL:

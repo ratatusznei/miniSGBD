@@ -1,7 +1,6 @@
 
 from ConectorMySQL import ConectorMySQL
 from GerenciadorArquivos import GerenciadorArquivos
-from CRUD import CRUD
 from QueryProcessor import QueryProcessor
 import os
 import time
@@ -20,7 +19,6 @@ class Interface:
         self.colunas = []
         self.mensagemLoad = ""
         self.loadConcluido = False
-        self.crud = CRUD()
 
     #estado 0 
     def menuInicial(self):
